@@ -1,0 +1,44 @@
+---
+title: "Leaf_characterization"
+output: html_document
+---
+
+```{r}
+#Install necisary packages
+install.packages("ggpubr")
+install.packages("readxl")
+```
+
+```{r}
+#Load libraries
+library(ggplot2)
+library(ggpubr)
+library(readxl)
+```
+
+```{r}
+#Read in data
+heavy_spray.master <- read_excel("C:\\Users\\dmbea\\Desktop\\Master_spray_data.xlsx")
+
+heavy_spray.master.comparison <- compare_means(PDA ~ Geno, method = 'wilcox.test', data = heavy_spray.master) #compare genotypes using wilcox
+```
+
+```{r}
+#saving the plot
+#jpeg("HeavySprayMaster.jpg", width = 1000, height = 500)
+#Generate plot with pairwise comparisons of genotypes of interst
+to_compare.master <- list( c("Gala", "Robusta5"),
+                    c("Gala", "Empire"),
+                    c("Gala", "Enterprise"),
+                    c("Enterprise", "Robusta5"),
+                    c("Empire", "Robusta5"),
+                    c("Cox's OP", "Robusta5"),
+                    c("Cox's OP", "Gala"))
+box_plot <- ggboxplot(heavy_spray.master, x = "Geno", y = "PDA", color = "Geno", title = "Heavy Spray All Trials")
+  box_plot +  
+  stat_compare_means(comparisons = to_compare.master)
+  stat_compare_means(label.y = 60)
+  
+#dev.off()
+```
+
